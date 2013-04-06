@@ -1,211 +1,261 @@
 //====================================================================================
 // SimpleShader Class:
-//	 Takes care of everything shader
-// 
-// Discussion:
-//   Should i use std::vector<char> instead of std::unique_ptr<char[]> ?
+//	Takes care of everything shader
+//      Can only use vertex, geometry and fragment programs
 //====================================================================================
 #ifndef MFL_GRAPHICS_SIMPLESHADER_INCLUDED
 #define MFL_GRAPHICS_SIMPLESHADER_INCLUDED
 
-#include "MFL_Graphics_Common.hpp"
-#include "MFL_Exception.hpp"
+#include "graphics_common.hpp"
+#include "exception.hpp"
 
-#include <GL\glew.h>
+#include <GL/glew.h>
 
 #include <map>
-#include <memory>
+#include <vector>
+#include <cstring>
 
 GRAPHICS_BEGIN
 
 class SimpleShader{
-	typedef char const * const		const_str;
-
-	//================================================================================
-	// following typedefs are just for the sake of explicity
-	//================================================================================
-	typedef char const *			  const_str_weak;
-	typedef std::unique_ptr<GLchar[]> GLchar_ptr;
-
-	typedef GLuint	Shader;
-	typedef GLuint	Program;
-	typedef GLuint	Attribute;
-
-	typedef GLint	UniformLocation;
 public:
-	SimpleShader()
-		:n_attribs(0),attrib(),uniform(),
-		 program(0),
-		 vertex(0),fragment(0),geometry(0){}
-	~SimpleShader(){
-		_deleteShader(vertex);
-		_deleteShader(fragment);
-		_deleteShader(geometry);
+    SimpleShader()
+        :attrib_(),uniform_(),
+         num_attribs_(0),
+         program_(0),
+         vertex_shader_(0),fragment_shader_(0),geometry_shader_(0){}
+    ~SimpleShader(){
+        _deleteShader(vertex_shader_);
+        _deleteShader(geometry_shader_);
+        _deleteShader(fragment_shader_);
 
-		_deleteProgram();
-	}
+        _deleteProgram();
+    }
 
-	//================================================================================
-	// will bind attributes to incrementing uint
-	//================================================================================
-	void   setAttrib(const_str name){
-		attrib[name] = n_attribs;
-		glBindAttribLocation(program,n_attribs,name);
-		++n_attribs;
-	}
-	GLuint getAttrib(const_str name){
-		return attrib[name];
-	}
+    //================================================================================
+    // will bind attributes to incrementing uint
+    //================================================================================
+    void setAttrib
+    (
+        char const * name
+    )
+    {
+        attrib_[name] = num_attribs_;
+        glBindAttribLocation(program,n_attribs,name);
+        ++num_attribs_;
+    }
+    GLuint getAttrib
+    (
+        char const * name
+    )
+    const
+    { return attrib_[name]; }
 
-	//================================================================================
-	// will throw exception if name is not found
-	//================================================================================
-	void  setUniform(const_str name){
-		UniformLocation location = glGetUniformLocation(program,name);
-		if( location == -1 )
-			THROW_RT_ERR("Could not find uniform with name \'"+name+"\' or name is reserved.");
+    void resetAttribs()
+    {
+        attrib_.clear();
+        num_attribs_ = 0;
+    }
 
-		uniform[name] = location;
-	}
-	GLint getUniform(const_str name){
-		return uniform[name];
-	}
+    //================================================================================
+    // will throw exception if name is not found
+    //================================================================================
+    void setUniform
+    (
+        char const * name
+    )
+    {
+        GLint location = glGetUniformLocation(program,name);
+        if( location == -1 )
+                THROW_RT_ERR("Could not find uniform with name \'"+name+"\' or name is reserved.");
 
-	//================================================================================
-	// methods to aquire shaders from source
-	//================================================================================
-	void addShader_VS(const_str shader){
-		_createShaderFromSource(shader,GL_VERTEX_SHADER,vertex);
-	}
-	void addShader_GS(const_str shader){
-		_createShaderFromSource(shader,GL_GEOMETRY_SHADER,geometry);
-	}
-	void addShader_FS(const_str shader){
-		_createShaderFromSource(shader,GL_FRAGMENT_SHADER,fragment);
-	}
+        uniform_[name] = location;
+    }
+    GLint getUniform
+    (
+        char const * name
+    )
+    const
+    { return uniform_[name]; }
 
-	//================================================================================
-	// method to bind shaders to program 
-	// shaders must first be aquired via 'addShader_*'
-	//================================================================================	
-	void link(){
-		if(program)
-			_deleteProgram();
+    void resetUniforms()
+    { uniform_.clear(); }
 
-		program = glCreateProgram();
+    //================================================================================
+    // methods to aquire shaders from source
+    //================================================================================
+    void addShader_VS
+    (
+        char const * shader_source
+    )
+    { _createShaderFromSource( shader_source, GL_VERTEX_SHADER, vertex_shader_); }
+    
+    void addShader_GS
+    (
+        char const * shader_source
+    )
+    { _createShaderFromSource( shader_source, GL_GEOMETRY_SHADER, geometry_shader_); }
+    
+    void addShader_FS
+    (
+        char const * shader_source
+    )
+    { _createShaderFromSource( shader_source, GL_FRAGMENT_SHADER, fragment_shader_); }
 
-		if(vertex)
-			glAttachShader(program,vertex);
-		if(geometry)
-			glAttachShader(program,geometry);
-		if(fragment)
-			glAttachShader(program,fragment);
+    //================================================================================
+    // method to bind shaders to program 
+    // shaders must first be aquired via 'addShader_*'
+    //================================================================================	
+    void link()
+    {
+        if(program_ > 0) // maybe a throw instead
+                _deleteProgram();
 
-		glLinkProgram(program);
-		_programLinkCheck();
-	}
-	//================================================================================
-	// method to activate program
-	// if debugging is enabled it will also validate the program 
-	//================================================================================	
-	void use(){
+        program_ = glCreateProgram();
+
+        if(vertex_shader_ > 0)
+            glAttachShader(program,vertex);
+        if(geometry_shader_ > 0)
+            glAttachShader(program,geometry);
+        if(fragment_shader_ > 0)
+            glAttachShader(program,fragment);
+
+        glLinkProgram(program);
+        _programLinkCheck();
+    }
+    //================================================================================
+    // method to activate program
+    // if debugging is enabled it will also validate the program 
+    //================================================================================	
+    void use()
+    {
 #ifdef _DEBUG
-		glValidateProgram(program);
-		_programValidateCheck();
+        glValidateProgram(program);
+        _programValidateCheck();
 #endif
-		glUseProgram(program);
-	}
+        glUseProgram(program);
+    }
 
 private:
-	//================================================================================
-	// Hidden shader functions
-	//================================================================================
-	void _createShaderFromSource(const_str_weak source,GLenum type,Shader& id){
-		if(id)// throw exception
-			_deleteShader(id);
+    //================================================================================
+    // Hidden shader functions
+    //================================================================================
+    void _createShaderFromSource
+    (
+        char const * source, 
+        GLenum shader_type,
+        GLuint shader_id
+    )
+    {
+        if(shader_id)// throw exception
+                _deleteShader(shader_id);
 
-		id = glCreateShader(type);
-		GLint source_size = ::strlen(source);
-		glShaderSource(id,1,&source,&source_size);
-		glCompileShader(id);
-		_shaderCompileCheck(id);
-	}
-	void _shaderCompileCheck(Shader& id){
-		GLint success = _shader::glGet(id,GL_COMPILE_STATUS);
-		if( success != GL_TRUE )
-			_shaderInfoLog_THROW(id);
-	}
+        shader_id = glCreateShader(shader_type);
+        GLint source_size = ::strlen(source);
+        glShaderSource(shader_id,1,&shader_source,&source_size);
+        glCompileShader(shader_id);
+        _shaderCompileCheck(shader_id);
+    }
+    void _shaderCompileCheck
+    (
+        GLuint shader_id
+    )
+    {
+        GLint success = _shader_glGet(shader_id,GL_COMPILE_STATUS);
+        if( success != GL_TRUE )
+                _shaderInfoLog_THROW(shader_id);
+    }
 
-	void _shaderInfoLog_THROW(Shader& id){
-		GLint log_size = _shader::glGet(id,GL_INFO_LOG_LENGTH);
-		GLchar_ptr log( new GLchar[log_size] );
-		glGetShaderInfoLog(id,log_size,nullptr,log.get());
+    void _shaderInfoLog_THROW
+    (
+        GLuint shader_id
+    )
+    {
+        GLint log_size = _shader_glGet(shader_id,GL_INFO_LOG_LENGTH);
+        std::vector<GLchar> log(log_size);
+        glGetShaderInfoLog(shader_id,log_size,nullptr,log.data());
 
-		THROW_RT_ERR(std::string("GL Shader Error : ")+log.get());
-	}
+        THROW_RT_ERR(std::string("GL Shader Error : ")+log.data());
+    }
 
-	void _deleteShader(Shader& id){
-		glDeleteShader(id);
-		id = 0;
-	}
+    void _deleteShader
+    (
+        GLuint shader_id
+    )
+    {
+        glDeleteShader(shader_id);
+        shader_id = 0;
+    }
 
-	struct _shader{
-		static GLint glGet(GLuint& id,GLenum what){
-			GLint param;
-			glGetShaderiv(id,what,&param);
-			return param;
-		}
-	};
+    GLint _shader_glGet
+    (
+        GLuint shader_id,
+        GLenum what
+    )
+    {
+        GLint param;
+        glGetShaderiv(shader_id,what,&param);
+        return param;
+    }
 
-	//================================================================================
-	// Hidden program functions
-	//================================================================================
-	void _programLinkCheck(){
-		GLint success = _program::glGet(program,GL_LINK_STATUS);
-		if( success != GL_TRUE )
-			_programInfoLog_THROW();
-	}
-	void _programValidateCheck(){
-		GLint success = _program::glGet(program,GL_VALIDATE_STATUS);
-		if( success != GL_TRUE )
-			_programInfoLog_THROW();
-	}
+    //================================================================================
+    // Hidden program functions
+    //================================================================================
+    void _programLinkCheck()
+    {
+        GLint success = _program_glGet(program_,GL_LINK_STATUS);
+        if( success != GL_TRUE )
+                _programInfoLog_THROW();
+    }
+    void _programValidateCheck()
+    {
+        GLint success = _program_glGet(program_,GL_VALIDATE_STATUS);
+        if( success != GL_TRUE )
+                _programInfoLog_THROW();
+    }
 
-	void _programInfoLog_THROW(){
-		GLint log_size = _program::glGet(program,GL_INFO_LOG_LENGTH);
-		GLchar_ptr log( new GLchar[log_size] );
-		glGetShaderInfoLog(program,log_size,nullptr,log.get());
+    void _programInfoLog_THROW()
+    {
+        GLint log_size = _program_glGet(program_,GL_INFO_LOG_LENGTH);
+        std::vector<GLchar> log( log_size );
+        glGetShaderInfoLog(program,log_size,nullptr,log.data());
 
-		THROW_RT_ERR(std::string("GL Program Error : ")+log.get());
-	}
+        THROW_RT_ERR(std::string("GL Program Error : ")+log.data());
+    }
 
-	void _deleteProgram(){
-		glDeleteProgram(program);
-		program = 0;
-	}
+    void _deleteProgram()
+    {
+        glDeleteProgram(program_);
+        program_ = 0;
+    }
 
-	struct _program{
-		static GLint glGet(GLuint& id,GLenum what){
-			GLint param;
-			glGetProgramiv(id,what,&param);
-			return param;
-		}
-	};
+    GLint _program_glGet
+    (
+        GLuint program_id,
+        GLenum what
+    )
+    {
+        GLint param;
+        glGetProgramiv(program_id,what,&param);
+        return param;
+    }
 
 
-	//================================================================================
-	// members
-	//================================================================================
+
+    //================================================================================
+    // members
+    //================================================================================
 private:
-	GLuint n_attribs;
-	std::map<const_str,GLuint>	attrib; 
-	std::map<const_str,GLint>	uniform;
+    std::map<char const *,GLuint>       attrib_; 
+    std::map<char const *,GLint>	uniform_;
 
-	Program program;
+    unsigned int num_attribs_;
 
-	Shader	vertex;
-	Shader	fragment;
-	Shader	geometry;
+    GLuint program_;
+
+    GLuint vertex_shader_;
+    GLuint fragment_shader_;
+    GLuint geometry_shader_;
 };
 
 GRAPHICS_END
