@@ -1,7 +1,7 @@
 #ifndef MFL_GRAPHICS_COMMONSHADERS_INCLUDED
 #define MFL_GRAPHICS_COMMONSHADERS_INCLUDED
 
-#include "MFL_Graphics_Common.hpp"
+#include "graphics_common.hpp"
 #define STRINGIFY(x) #x
 
 GRAPHICS_BEGIN

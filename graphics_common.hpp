@@ -1,9 +1,9 @@
 #ifndef MFL_GRAPHICS_COMMON_INCLUDED
 #define MFL_GRAPHICS_COMMON_INCLUDED
 
-#include "MFL_Common.hpp"
+#include "common.hpp"
 
-#define GRAPHICS_BEGIN	namespace Graphics{
+#define GRAPHICS_BEGIN	namespace graphics{
 #define GRAPHICS_END	}
 
 GRAPHICS_BEGIN
