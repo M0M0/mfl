@@ -2,8 +2,8 @@
 #define MFL_LINALG_MATRIX_INCLUDED
 
 
-#include "MFL_LinAlg_Common.hpp"
-#include "MFL_LinAlg_Vector.hpp"
+#include "linalg_common.hpp"
+#include "linalg_vector.hpp"
 
 LINALG_BEGIN
 

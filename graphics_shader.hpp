@@ -1,13 +1,15 @@
 #ifndef MFL_SHADER_INCLUDED
 #define MFL_SHADER_INCLUDED
 
-#include "MFL_Graphics_Common.hpp"
-#include "MFL_Exception.hpp"
-#include <GL\glew.h>
+#include "graphics_common.hpp"
 
 #include <string>
 #include <memory>
 #include <map>
+
+#include <GL/glew.h>
+
+#include "exception.hpp"
 
 GRAPHICS_BEGIN
 
@@ -64,7 +66,8 @@ namespace gl{
 	}
 
 	// with glsl shaders using location
-	GLuint GetProgram_VertexFragmentShader(const char* vertex_source,const char* fragment_source){
+	GLuint GetProgram_VertexFragmentShader(const char* vertex_source,
+                                           const char* fragment_source) {
 		GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 		GLint Size = ::strlen(vertex_source);
 		glShaderSource(vShader,1,&vertex_source,&Size);

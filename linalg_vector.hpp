@@ -5,7 +5,7 @@
 #ifndef MFL_LINALG_VECTOR_INCLUDED
 #define MFL_LINALG_VECTOR_INCLUDED
 
-#include "MFL_LinAlg_Common.hpp"
+#include "linalg_common.hpp"
 
 #include <cassert>
 #include <algorithm>

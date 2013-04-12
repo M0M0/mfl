@@ -3,6 +3,7 @@
 
 #include "graphics_common.hpp"
 
+#include <cassert>
 #include <vector>
 #include <algorithm>
 

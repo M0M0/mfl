@@ -1,41 +1,40 @@
 #ifndef MFL_GRAPHICS_SCENE_INCLUDED
 #define MFL_GRAPHICS_SCENE_INCLUDED
 
-#include "MFL_Graphics_SceneNode.hpp"
+#include "graphics_common.hpp"
+#include "graphics_scenenode.hpp"
 
 GRAPHICS_BEGIN
 
-// Discussion: it might be prefereable to use pointers or references to the SceneNodes instead!
+// It might be prefereable to use pointers
+//  or references to the SceneNodes instead!
 class Scene{
-
 public:
-	Scene():_Node(),_Buffers(){}
-	void addSceneNode(SceneNode& node){
-		_Node.push_back(node); 
-	}
-	// must be called before drawing
-	void generateBuffers(){
-		_Buffers.Generate();
-	}
+  Scene() : node_(), buffers_() {}
+  void AddSceneNode(SceneNode& node){
+    node_.push_back(node);
+  }
+  // must be called before drawing
+  void GenerateBuffers() {
+    buffers_.Generate();
+  }
 
-	void bind(){
-		for( auto& n : _Node )
-			n.recursivebind(_Buffers);
-	}
+  void Bind() {
+    for (auto& n : node_) n.RecursiveBind(buffers_);
+  }
 
-	void transform(glm::mat4& tf){
-		for( auto& n : _Node )
-			n.transform(tf,_Buffers);
-	}
-	void draw(GLenum mode=GL_TRIANGLES){
-		_Buffers.Draw(mode);
-	}
-	void drawIndexed(GLenum mode = GL_TRIANGLES){
-		_Buffers.DrawIndexed(mode);
-	}
+  void Transform(glm::mat4& tf) {
+    for (auto& n : node_) n.Transform(tf,buffers_);
+  }
+  void Draw(GLenum mode = GL_TRIANGLES) {
+    buffers_.Draw(mode);
+  }
+  void DrawIndexed(GLenum mode = GL_TRIANGLES) {
+    buffers_.DrawIndexed(mode);
+  }
 private:
-	std::vector<SceneNode>		_Node;
-	Buffers						_Buffers;
+  std::vector<SceneNode> node_;
+  Buffers buffers_;
 };
 
 GRAPHICS_END

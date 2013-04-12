@@ -3,12 +3,12 @@
 
 #include "common.hpp"
 
-#define GRAPHICS_BEGIN	namespace graphics{
+#define GRAPHICS_BEGIN	namespace graphics {
 #define GRAPHICS_END	}
 
 GRAPHICS_BEGIN
 	
-using MFL::uint;
+using mfl::uint;
 
 GRAPHICS_END
 

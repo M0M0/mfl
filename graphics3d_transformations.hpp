@@ -1,9 +1,9 @@
 #ifndef MFL_LINALG_PROJECTION_INCLUDED
 #define MFL_LINALG_PROJECTION_INCLUDED
 
-#include "MFL_LinAlg_Matrix.hpp"
+#include "linalg_matrix.hpp"
 #define MFL_CONSTANTS
-#include "MFL_math.hpp"
+#include "math.hpp"
 #include <numeric>
 
 namespace MFL{
