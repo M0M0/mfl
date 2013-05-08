@@ -6,7 +6,7 @@
 
 #include <glm/glm.hpp>
 
-#include "graphics_common.hpp"
+#include "common.hpp"
 
 GRAPHICS_BEGIN
 

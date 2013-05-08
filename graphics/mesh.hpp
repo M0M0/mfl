@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 
-#include "graphics_rawmesh.hpp"
+#include "rawmesh.hpp"
 
 GRAPHICS_BEGIN
 

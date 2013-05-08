@@ -6,11 +6,10 @@
 #ifndef MFL_GRAPHICS_BUFFERS_INCLUDED
 #define MFL_GRAPHICS_BUFFERS_INCLUDED
 
-#include "graphics_common.hpp"
-
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+#include "common.hpp"
 
 // This Class uses a hardcoded Buffer Limit!
 // For bigger buffer switch indexing buffer to GLuint! ( now using GLushort )

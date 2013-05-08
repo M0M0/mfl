@@ -1,9 +1,9 @@
 #ifndef MFL_GRAPHICS_UTILITIES_INCLUDED
 #define MFL_GRAPHICS_UTILITIES_INCLUDED
 
-#include "graphics_common.hpp"
-
 #include <glm/glm.hpp>
+
+#include "common.hpp"
 
 GRAPHICS_BEGIN
 

@@ -1,15 +1,14 @@
 #ifndef MFL_SHADER_INCLUDED
 #define MFL_SHADER_INCLUDED
 
-#include "graphics_common.hpp"
-
 #include <string>
 #include <memory>
 #include <map>
 
 #include <GL/glew.h>
 
-#include "exception.hpp"
+#include "common.hpp"
+#include "../utility/exception.hpp"
 
 GRAPHICS_BEGIN
 

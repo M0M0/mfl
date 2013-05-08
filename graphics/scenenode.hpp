@@ -5,8 +5,8 @@
 #include <vector>
 #include <memory>
 
-#include "graphics_mesh.hpp"
-#include "graphics_buffers.hpp"
+#include "mesh.hpp"
+#include "buffers.hpp"
 
 GRAPHICS_BEGIN
 

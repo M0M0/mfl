@@ -10,8 +10,8 @@
 
 #include <glm/gtc/constants.hpp>
 
-#include "graphics_rawmesh.hpp"
-#include "graphics_utilities.hpp"
+#include "rawmesh.hpp"
+#include "utilities.hpp"
 
 GRAPHICS_BEGIN
 

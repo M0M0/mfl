@@ -1,8 +1,8 @@
 #ifndef MFL_GRAPHICS_SCENE_INCLUDED
 #define MFL_GRAPHICS_SCENE_INCLUDED
 
-#include "graphics_common.hpp"
-#include "graphics_scenenode.hpp"
+#include "common.hpp"
+#include "scenenode.hpp"
 
 GRAPHICS_BEGIN
 

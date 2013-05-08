@@ -12,8 +12,8 @@
 
 #include <GL/glew.h>
 
-#include "graphics_common.hpp"
-#include "exception.hpp"
+#include "common.hpp"
+#include "../utility/exception.hpp"
 
 GRAPHICS_BEGIN
 /// \class SimpleShader

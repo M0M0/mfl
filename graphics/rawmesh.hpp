@@ -1,14 +1,14 @@
 #ifndef MFL_GRAPHICS_RAW_MESH_INCLUDED
 #define MFL_GRAPHICS_RAW_MESH_INCLUDED
 
-#include "graphics_common.hpp"
-
 #include <cassert>
 #include <vector>
 #include <algorithm>
 
 #include <glm/glm.hpp>
 #include <GL/glew.h>
+
+#include "common.hpp"
 
 GRAPHICS_BEGIN
 
