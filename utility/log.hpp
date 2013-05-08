@@ -5,13 +5,15 @@
 #include <string> 
 #include <memory>
 #include <algorithm>
-#include "MFL_Exception.hpp"
 
 #include <ctime>   // for Errorlog
 #include <cstdarg> // va functions also Errorlog
 #include <memory>  // Errorlog
 
-namespace MFL{
+#include "../common.hpp"
+#include "exception.hpp"
+
+MFL_BEGIN
 
 class Log{
  public:
@@ -96,6 +98,7 @@ protected:
 #pragma warning(pop)
 
 #undef STRING_SIZE
-}
+
+MFL_END
 
 #endif//MFL_LOG_INCLUDED
