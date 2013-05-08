@@ -74,7 +74,22 @@ public:
     time_saved_ = time_end;
     return delta;
   }
-  
+  /// Returns the timedifference in microseconds since
+  /// the last call to Start or Unpause.
+  /// \details This function returns 0 if the instance is paused.
+  /// The function will reset the timer!
+  /// \return Returns the timedifference. (The default return type is float.)
+  template <typename Time = float>
+  Time DeltaMicroS() {
+    using std::chrono::duration_cast;
+    using std::chrono::microseconds;
+    if (pause_) return static_cast<Time>(0);
+    auto time_end = Clock_t::now();
+    Time delta = static_cast<Time>(
+	         duration_cast<microseconds>(time_end - time_saved_).count());
+    time_saved_ = time_end;
+    return delta;
+  }  
 private:
   TimePoint time_saved_; ///< TimePoint variable for storage of timedifference.
   bool      pause_; ///< A boolean switch for simple pause functionality.

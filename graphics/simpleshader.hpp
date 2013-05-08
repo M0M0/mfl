@@ -92,13 +92,18 @@ public:
   //==========================================================================
   // method to activate program
   // if debugging is enabled it will also validate the program 
+  // added return value
   //==========================================================================	
-  void Use() {
+  int Use() {
 #ifdef _DEBUG
     glValidateProgram(program_);
     _ProgramValidateCheck();
 #endif
-    glUseProgram(program_);
+    if(program_)
+      glUseProgram(program_);
+    else
+      return -1;
+    return 0;
   }
 private:
   //==========================================================================

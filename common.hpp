@@ -6,7 +6,7 @@
 //#endif
 
 
-#define MFL_BEGIN	namespace mfl{
+#define MFL_BEGIN	namespace mfl {
 #define MFL_END		}
 
 MFL_BEGIN
