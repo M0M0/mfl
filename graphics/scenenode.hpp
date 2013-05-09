@@ -10,9 +10,9 @@
 
 GRAPHICS_BEGIN
 
-class SceneNode{
+class SceneNode {
   typedef std::shared_ptr<Mesh const>	MeshPtr;
-public:
+ public:
   SceneNode() : tf_(),subnode_(),meshptr_(nullptr),bound_(false),moved_(true) {
   }
   //=========================================================
@@ -95,7 +95,7 @@ private:
     for (auto& n : normal) n = tmat*n; // transform normals
 
     if (!bound_) { // transform indices
-      auto offset = buffers.getoffset(); 
+      auto offset = buffers.offset(); 
       for (auto& i : index) i += offset.first;  
     } else {
       for (auto& i : index) i += offset_.first;

@@ -1,9 +1,9 @@
 #ifndef MFL_GRAPHICS_RAW_MESH_INCLUDED
 #define MFL_GRAPHICS_RAW_MESH_INCLUDED
 
-#include <cassert>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
 #include <glm/glm.hpp>
 #include <GL/glew.h>
@@ -16,7 +16,7 @@ struct Mesh;
 
 // mesh without color or texture data
 //TODO(mojo): Change to fit standards.
-struct RawMesh{
+struct RawMesh {
   typedef GLushort	Index;
   typedef glm::vec3	Vec3;
   
@@ -50,9 +50,7 @@ struct RawMesh{
     assert(position_.size() == normal_.size());
     index_.insert(index_.end(),first,last);
   }
-  //===========================
-  // members
-  //===========================
+
   vector_Vec3 position_;
   vector_Vec3 normal_;
   vector_Index index_;

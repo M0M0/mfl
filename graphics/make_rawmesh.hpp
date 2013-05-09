@@ -15,7 +15,7 @@
 
 GRAPHICS_BEGIN
 
-RawMesh makeCube(float x=1,float y=1,float z=1) {
+RawMesh MakeCube(float x=1,float y=1,float z=1) {
   const unsigned int index_size = 36;
   const RawMesh::Index index_data[index_size] = //just the raw index data
   { 

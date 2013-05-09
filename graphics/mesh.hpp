@@ -9,21 +9,24 @@ GRAPHICS_BEGIN
 
 class SceneNode;
 //TODO(mojo): Change fit standards.
-struct Mesh{
-	Mesh() : raw_(), color_() {}
-	Mesh(RawMesh& raw) : raw_(raw), color_() {}
-	Mesh(RawMesh& raw,std::vector<glm::vec4> color) : raw_(raw), color_() {
-		setcolor(color);
-	}
-	void setcolor(std::vector<glm::vec4>& color) {
-		assert(color.size() == raw_.Size());
-		color_ = color;
-    }
-	//===========================
-    // members
-    //===========================
-	RawMesh	raw_;
-	std::vector<glm::vec4>	color_;
+struct Mesh {
+  Mesh() : raw_(), color_() {}
+  Mesh(RawMesh& raw) : raw_(raw), color_() {}
+  Mesh(RawMesh& raw,std::vector<glm::vec4> color) : raw_(raw), color_() {
+    SetColor(color);
+  }
+  void SetColor(std::vector<glm::vec4>& color) {
+    assert(color.size() == raw_.Size());
+    color_ = color;
+  }
+  void SetColor(glm::vec4 color) {
+    color_ = std::vector<glm::vec4>(raw_.Size(),color);
+  }
+  //===========================
+  // members
+  //===========================
+  RawMesh	raw_;
+  std::vector<glm::vec4>	color_;
 };
 
 GRAPHICS_END

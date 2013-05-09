@@ -8,8 +8,8 @@ GRAPHICS_BEGIN
 
 // It might be prefereable to use pointers
 //  or references to the SceneNodes instead!
-class Scene{
-public:
+class Scene {
+ public:
   Scene() : node_(), buffers_() {}
   void AddSceneNode(SceneNode& node){
     node_.push_back(node);
