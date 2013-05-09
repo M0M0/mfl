@@ -15,45 +15,32 @@ class SceneNode {
  public:
   SceneNode() : tf_(),subnode_(),meshptr_(nullptr),bound_(false),moved_(true) {
   }
-  //=========================================================
   // adds a child node that will be transformed with the node
-  //=========================================================
   void AddSubNode(SceneNode node) {
     subnode_.push_back(node);
   }
-  //=========================================================
   // sets a shared pointer to mesh
-  //=========================================================
   void BindMesh(MeshPtr meshptr) {
     meshptr_ = meshptr;
   }
-  //=========================================================
   // transforms Node without interaction with the buffer
-  //=========================================================
   void TransformNoUpload(glm::mat4 const& transform) {
     tf_ = transform*tf_;// transform matrix
     moved_ = true;
     for (SceneNode& n : subnode_) n.TransformNoUpload(transform); //call childs
   }
-  //=========================================================
   // transforms Node and commits mesh to the buffer
-  //=========================================================
   void Transform(glm::mat4 const& transform,Buffers& buffers) {
     TransformNoUpload(transform);
     RecursiveBind(buffers);
   }
-
-  //=========================================================
   // commits mesh and all submeshes to buffer
-  //=========================================================
   void RecursiveBind(Buffers& buffers) {
     _BindToBuffer(buffers);
     for (SceneNode& n : subnode_) n.RecursiveBind(buffers); // call childs
   }
 private:
-  //=========================================================
   // Private methods
-  //=========================================================
   void _BindToBuffer(Buffers& buffers){
     //only write into the buffer if moved
     if (!moved_ && bound_) return;
@@ -75,7 +62,6 @@ private:
     }
     moved_ = false;
   }
-  
   void _TransformMesh(
       glm::mat4& tf,
       Buffers& buffers,
@@ -102,9 +88,6 @@ private:
     }
   }
 
-  //=========================================================
-  // Members
-  //=========================================================
   glm::mat4 tf_;
   std::vector<SceneNode> subnode_;
   MeshPtr meshptr_;
