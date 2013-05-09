@@ -18,7 +18,7 @@
 GRAPHICS_BEGIN
 /// \class SimpleShader
 class SimpleShader{
-public:
+ public:
   SimpleShader()
     : attrib_(),
       uniform_(),
@@ -34,9 +34,7 @@ public:
     _DeleteShader(fragment_shader_);
     _DeleteProgram();
   }
-  //==========================================================================
   // will bind attributes to incrementing uint
-  //==========================================================================
   void SetAttrib(char const * name) {
     attrib_[name] = num_attribs_;
     glBindAttribLocation(program_,num_attribs_++,name);
@@ -48,9 +46,7 @@ public:
     attrib_.clear();
     num_attribs_ = 0;
   }
-  //==========================================================================
   // will throw exception if name is not found
-  //==========================================================================
   void SetUniform(char const * name) {
     GLint location = glGetUniformLocation(program_,name);
     if (location == -1)
@@ -64,9 +60,7 @@ public:
   void ResetUniforms() {
     uniform_.clear();
   }
-  //==========================================================================
   // methods to aquire shaders from source
-  //==========================================================================
   void AddShaderVS(char const * shader_source) {
     _CreateShaderFromSource(shader_source,GL_VERTEX_SHADER,vertex_shader_);
   }
@@ -76,10 +70,8 @@ public:
   void AddShaderFS(char const * shader_source) {
     _CreateShaderFromSource(shader_source,GL_FRAGMENT_SHADER,fragment_shader_);
   }
-  //==========================================================================
   // method to bind shaders to program 
   // shaders must first be aquired via 'addShader_*'
-  //==========================================================================
   void Link() {
     if (program_ > 0) _DeleteProgram(); // maybe a throw instead
     program_ = glCreateProgram();
@@ -89,11 +81,9 @@ public:
     glLinkProgram(program_);
     _ProgramLinkCheck();
   }
-  //==========================================================================
   // method to activate program
   // if debugging is enabled it will also validate the program 
   // added return value
-  //==========================================================================	
   int Use() {
 #ifdef _DEBUG
     glValidateProgram(program_);
@@ -105,10 +95,9 @@ public:
       return -1;
     return 0;
   }
-private:
-  //==========================================================================
-  // Hidden shader functions
-  //==========================================================================
+
+ private:
+  // shader functions
   void _CreateShaderFromSource(char const * source,GLenum shader_type,
 			       GLuint& shader_id) {
     if (shader_id > 0) _DeleteShader(shader_id); // throw exception
@@ -137,9 +126,7 @@ private:
     glGetShaderiv(shader_id,what,&param);
     return param;
   }
-  //==========================================================================
-  // Hidden program functions
-  //==========================================================================
+  // program functions
   void _ProgramLinkCheck() {
     GLint success = _ProgramGLGet(program_,GL_LINK_STATUS);
     if (success != GL_TRUE) _ProgramInfoLogTHROW();
@@ -164,9 +151,7 @@ private:
     glGetProgramiv(program_id,what,&param);
     return param;
   }
-  //==========================================================================
-  // members
-  //==========================================================================
+
   std::map<char const *,GLuint> attrib_; 
   std::map<char const *,GLint> uniform_;
   unsigned int num_attribs_;
