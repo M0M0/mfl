@@ -1,5 +1,9 @@
-Last remainders of MFL.
+MFL library.
+Graphics and utility functions are in the namespace / folder 
+with the same name.
 
-Graphics & Windows namespaces will be ported to linux.
-I might move the other files out of the repository.
+graphics/ are mostly dependent on the 'glm' library.
 
+Deprecated classes are in deprecated/ and do are not in a specific 
+namespace. It just contains some Windows classes and other random 
+utilities.
