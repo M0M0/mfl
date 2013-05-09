@@ -39,17 +39,16 @@ class Bitmap {
     png_infop info_ptr = NULL;
     png_byte ** row_pointers = NULL;
     
-    int status = -1;
     const size_t pixel_size = 3;
     const size_t depth = 8;
 
     fileptr = fopen(path,"wb");
-    if (!fileptr) return status;
+    if (!fileptr) return -1;
 
     png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
     if (png_ptr == NULL) {
       fclose(fileptr);
-      return status;
+      return -1;
     }
     
     info_ptr = png_create_info_struct(png_ptr);
@@ -62,7 +61,7 @@ class Bitmap {
     if (setjmp(png_jmpbuf(png_ptr))) {
       png_destroy_write_struct(&png_ptr,&info_ptr);
       fclose(fileptr);
-      return status;
+      return -1;
     }
     
     png_set_IHDR(png_ptr,
@@ -74,14 +73,13 @@ class Bitmap {
 		 PNG_INTERLACE_NONE,
 		 PNG_COMPRESSION_TYPE_DEFAULT,
 		 PNG_FILTER_TYPE_DEFAULT);
-    row_pointers = (png_byte**) png_malloc(png_ptr,
-					   height_ * sizeof(png_byte*));
-
+    row_pointers = reinterpret_cast<png_byte**>(
+		     png_malloc(png_ptr,height_ * sizeof(png_byte*)) );
     png_byte * row;
     pixel_t * pixel;
     for (int y = 0; y < height_; ++y) {
-      row = (png_byte*) png_malloc(png_ptr,
-				   sizeof(std::uint8_t) * width_ * pixel_size);
+      row = reinterpret_cast<png_byte*>( 
+	      png_malloc(png_ptr,sizeof(std::uint8_t) * width_ * pixel_size) );
       row_pointers[y] = row;
       for (int x = 0; x < width_; ++x) {
 	pixel = _Pixel(x,y);
@@ -94,8 +92,6 @@ class Bitmap {
     png_init_io(png_ptr,fileptr);
     png_set_rows(png_ptr,info_ptr,row_pointers);
     png_write_png(png_ptr,info_ptr,PNG_TRANSFORM_IDENTITY,NULL);
-
-    status = 0;
     
     for (int y = 0; y < height_; ++y) png_free(png_ptr,row_pointers[y]);
     png_free(png_ptr,row_pointers);
@@ -103,7 +99,7 @@ class Bitmap {
     png_destroy_write_struct(&png_ptr,&info_ptr);
     fclose(fileptr);
 
-    return status;
+    return 0;
   }
 
  private:
