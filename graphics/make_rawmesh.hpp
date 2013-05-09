@@ -64,7 +64,7 @@ RawMesh MakeCube(float x=1,float y=1,float z=1) {
   return Cube;
 }
 
-RawMesh makeTetrahedron(){
+RawMesh MakeTetrahedron(){
   using glm::root_two;
   const unsigned int index_size = 12;
   const RawMesh::Index index_data[index_size] =//just the raw index data
@@ -105,7 +105,7 @@ RawMesh makeTetrahedron(){
 
 // still some problems with normals when mesh is called with arguments
 // less than (x,40,40)
-RawMesh makeSphere(float r=1,int num_steps_theta=3,int num_steps_phi=3){
+RawMesh MakeSphere(float r=1,int num_steps_theta=3,int num_steps_phi=3){
   using glm::sin;
   using glm::cos;
   using glm::vec3;
@@ -165,7 +165,7 @@ RawMesh makeSphere(float r=1,int num_steps_theta=3,int num_steps_phi=3){
   return sphere;
 }
 
-RawMesh makeCylinder(float r=1,float z=1,int num_steps_phi=3) {
+RawMesh MakeCylinder(float r=1,float z=1,int num_steps_phi=3) {
   using glm::vec3;
   using glm::pi;
 
