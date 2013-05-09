@@ -28,10 +28,10 @@ class LSystem{
     return 0;
   }
   std::string state() const { return state_; }
-  int iteration_count() { return iteration_count; }
+  unsigned int iteration_count() { return iteration_count; }
 
  protected:
-  int iteration_count_;
+  unsigned int iteration_count_;
   std::map<char,std::string> ruleset_;
   std::string state_;
 };
