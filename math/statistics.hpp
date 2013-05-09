@@ -1,6 +1,3 @@
-// TODO: switch to unsigned int for samplesize!
-// Discussion : Use std::runtime_exception instead of assert?
-
 #ifndef MFL_MATH_STATISTICS_INCLUDED
 #define MFL_MATH_STATISTICS_INCLUDED
 
