@@ -18,17 +18,18 @@ class Scene {
   void GenerateBuffers() {
     buffers_.Generate();
   }
-
+  // must be called before drawing
   void Bind() {
     for (auto& n : node_) n.RecursiveBind(buffers_);
   }
-
   void Transform(glm::mat4& tf) {
     for (auto& n : node_) n.Transform(tf,buffers_);
   }
   void Draw(GLenum mode = GL_TRIANGLES) {
     buffers_.Draw(mode);
   }
+  // default drawing function
+  // if uncertain call this!
   void DrawIndexed(GLenum mode = GL_TRIANGLES) {
     buffers_.DrawIndexed(mode);
   }
