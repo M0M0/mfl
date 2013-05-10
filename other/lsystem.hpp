@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 #include "../common.hpp"
 
@@ -22,18 +23,18 @@ class LSystem{
       if (j != ruleset_.end()) update.push_back(j->second);
       else update.push_back(std::string(1,i));
     }
-    _state.clear();
+    state_.clear();
     for (auto& i : update) state_ += i;
-    ++iteration_count;
+    ++iteration_count_;
     return 0;
   }
   std::string state() const { return state_; }
-  unsigned int iteration_count() { return iteration_count; }
+  unsigned int iteration_count() const { return iteration_count_; }
 
  protected:
   unsigned int iteration_count_;
+  std::string  state_;
   std::map<char,std::string> ruleset_;
-  std::string state_;
 };
 
 MFL_END

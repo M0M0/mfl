@@ -11,10 +11,10 @@ MFL_BEGIN
 /// \details A wrapper for chrono that allows the get timedifference without
 /// the ridiculous syntax of chrono. Has pausing functionality.
 /// \author mojo
-class Clock{
+class Timer{
   typedef std::chrono::system_clock	   Clock_t;
   typedef std::chrono::time_point<Clock_t> TimePoint;
-public:
+ public:
   Clock() : time_saved_(),pause_(false) {
     Start();
   }
@@ -29,7 +29,7 @@ public:
   bool IsActive() const {
     return !pause_;
   }
-  /// Switches the instance into an paused state.
+   /// Switches the instance into an paused state.
   /// \details If a instance is paused any call to a Delta function return 0.
   /// \sa DeltaMS and DeltaS
   void Pause() {
@@ -89,8 +89,9 @@ public:
 	         duration_cast<microseconds>(time_end - time_saved_).count());
     time_saved_ = time_end;
     return delta;
-  }  
-private:
+  } 
+ 
+ private:
   TimePoint time_saved_; ///< TimePoint variable for storage of timedifference.
   bool      pause_; ///< A boolean switch for simple pause functionality.
 };
