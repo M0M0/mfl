@@ -15,7 +15,7 @@ class Timer{
   typedef std::chrono::system_clock	   Clock_t;
   typedef std::chrono::time_point<Clock_t> TimePoint;
  public:
-  Clock() : time_saved_(),pause_(false) {
+  Timer() : time_saved_(),pause_(false) {
     Start();
   }
   /// Saves the current time.

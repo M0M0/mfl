@@ -3,7 +3,7 @@
 
 #include <string>
 #include <map>
-#include <vector>
+#include <list>
 
 #include "../common.hpp"
 
@@ -13,27 +13,30 @@ class LSystem{
  public:
   LSystem(std::map<char,std::string> ruleset, std::string state)
       : iteration_count_(0),
-	state_(state),
-	ruleset_(ruleset) {
-  }									       
+	state_(state.begin(),state.end()),
+	ruleset_(ruleset) {}
   int Iterate() {
-    std::vector<std::string> update;
-    for (auto i : state_) {
-      auto j = ruleset_.find(i);
-      if (j != ruleset_.end()) update.push_back(j->second);
-      else update.push_back(std::string(1,i));
+    std::map<char,std::string>::iterator rule;
+    auto iter = state_.begin();
+    while (iter != state_.end()) {
+      rule = ruleset_.find(*iter);
+      if (rule != ruleset_.end()) {
+	iter = state_.erase(iter); // iter now points to the next position
+	// no change in iter necessary since it points to the following position
+        state_.insert(iter,rule->second.begin(),rule->second.end());
+      } else ++iter;
     }
-    state_.clear();
-    for (auto& i : update) state_ += i;
     ++iteration_count_;
     return 0;
   }
-  std::string state() const { return state_; }
+  std::string state() const {
+    return std::string(state_.begin(),state_.end());
+  }
   unsigned int iteration_count() const { return iteration_count_; }
 
  protected:
   unsigned int iteration_count_;
-  std::string  state_;
+  std::list<char> state_;
   std::map<char,std::string> ruleset_;
 };
 
