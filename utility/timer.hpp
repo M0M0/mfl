@@ -6,7 +6,7 @@
 #include "../common.hpp"
 
 MFL_BEGIN
-/// \class Clock
+/// \class Timer
 /// \brief A simple stopwatch class.
 /// \details A wrapper for chrono that allows the get timedifference without
 /// the ridiculous syntax of chrono. Has pausing functionality.
