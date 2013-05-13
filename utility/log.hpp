@@ -44,7 +44,9 @@ class ErrorLog : public Log {
     vsnprintf(tmp.data(),STRING_SIZE,str,arg_list);
     Error(std::string(tmp.data()));
   }
-  void Error(std::string const& str) { data_ += LogFormat() + "<-Err-> " + StringFormat(str) + '\n'; } 
+  void Error(std::string const& str) {
+    data_ += LogFormat() + "<-Err-> " + StringFormat(str) + '\n';
+  } 
   void Message(char const * str,...) {
     va_list arg_list;
     va_start(arg_list,str);
@@ -52,21 +54,25 @@ class ErrorLog : public Log {
     vsnprintf(tmp.data(),STRING_SIZE,str,arg_list);
     Message(std::string(tmp.data()));
   }
-  void Message(const std::string& str) { data_ += LogFormat() + "<-Msg-> " + StringFormat(str) + '\n'; }
+  void Message(const std::string& str) {
+    data_ += LogFormat() + "<-Msg-> " + StringFormat(str) + '\n';
+  }
 
  protected:
   std::string AddDate() {
     time_t rawtime;
     time(&rawtime);
     tm* timeinfo = localtime(&rawtime);
-    return std::to_string(timeinfo->tm_mday) + '/' + std::to_string(timeinfo->tm_mon+1) + '/'
+    return std::to_string(timeinfo->tm_mday) + '/'
+      + std::to_string(timeinfo->tm_mon+1) + '/' 
       + std::to_string(timeinfo->tm_year + 1900);
   }
   std::string AddTime() {
     time_t rawtime;
     time(&rawtime);
     tm* timeinfo = localtime(&rawtime);
-    return std::to_string(timeinfo->tm_hour) + ':' + std::to_string(timeinfo->tm_min) + '.'
+    return std::to_string(timeinfo->tm_hour) + ':'
+      + std::to_string(timeinfo->tm_min) + '.' 
       + std::to_string(timeinfo->tm_sec);
   }
   std::string LogFormat() { return AddDate() + ' ' + AddTime() + '\t'; }
