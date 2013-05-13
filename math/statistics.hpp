@@ -1,86 +1,81 @@
 #ifndef MFL_MATH_STATISTICS_INCLUDED
 #define MFL_MATH_STATISTICS_INCLUDED
 
-#include <cstdarg>
-#include <cassert>
 #include <numeric>
+#include <vector>
 
-#include "../common.hpp"
-
-MFL_BEGIN
 namespace math{
-namespace statistics{
 
-  template <typename T>
-  T sum(uint samplesize, T const * data) {
-    assert(data != nullptr);
-    return std::accumulate(data,data + samplesize,0);
+namespace detail {
+  template <typename T, typename UIntT>
+  T mean(T sum, UIntT n) {
+    //TODO: make this asserts work!
+    // static_assert(std::is_integral<UIntT>::value
+    //		  && std::is_unsigned<UIntT>::value,"n must be integer.");
+    // static_assert(std::is_arithmetic<T>::value,"sum must be arithmetic.");
+    return sum / static_cast<T>(n);
   }
-  template <typename T>
-  T mean(uint samplesize, T sum) { return sum / samplesize; }
-  template <typename T>
-  T mean(uint samplesize, T const * data) {
-    assert(data != nullptr);
-    return mean(samplesize,sum(samplesize,data));
-  }
-  // TODO(mojo): more robust implementation usable for arbitrary fields
-  template <typename T>
-  T standarddeviation(uint samplesize, T mean, T const * data) {
-    assert(data != nullptr);
+  template <typename IterT, typename T>
+  T std(IterT first, IterT last, T mean) {
+    //FIXME: just does not work (why?)
     T std = 0, temp;
-    for(T* iter = data;iter != data+samplesize; ++iter) {
-      temp = *iter * mean;
+    while (first != last) {
+      temp = *(first++) - mean;
       std += temp * temp;
     }
-    return std / (samplesize - 1);
+    return std;
   }
-  template <typename T>
-  T standarddeviation(uint samplesize, T const * data) {
-    return standarddeviation(samplesize,mean(samplesize,data),data);
-  }
+}
 
-  namespace variadic{
+template <typename IterT>
+typename std::iterator_traits<IterT>::
+value_type sum(IterT first, IterT last) {
+  return std::accumulate(first,last,0);
+}
+template <typename IterT>
+typename std::iterator_traits<IterT>::
+value_type mean(IterT first, IterT last) {
+  return detail::mean(sum(first,last),std::distance(first,last));
+}
+template <typename IterT>
+typename std::iterator_traits<IterT>::
+value_type std(IterT first, IterT last) {
+  return detail::std(first,last,mean(first,last));
+}
+
+namespace variadic{
+  namespace detail{
     template <typename T>
-    T sum(uint samplesize, ...){
-      va_list ap; 
-      va_start(ap, samplesize);
-      T sum = 0;
-      for (int i = 0; i < samplesize; ++i) sum += va_arg(ap, T);
-      va_end(ap);
-      return sum;
+    std::vector<T> makeVector(T const arg1){
+      return std::vector<T>(1,arg1);
     }
-
-    template <typename T>
-    T mean(uint samplesize, ...){ 
-      T* data = new T[samplesize];
-      va_list ap; 
-      va_start (ap, samplesize);
-      for(int i = 0;i < samplesize; ++i)
-	data[i] = va_arg(ap,T);	
-      va_end (ap);
-
-      T m = mean(samplesize,data);
-      delete[] data;
-      return m;
-    }
-
-    template <typename T>
-    T standarddeviation(uint samplesize, ...){
-      T* data = new T[samplesize];
-      va_list ap; 
-      va_start (ap, samplesize);
-      for(int i=0;i<samplesize;++i)
-	data[i] = va_arg(ap,T);	
-      va_end (ap);
-
-      T std = standarddeviation(samplesize,data);
-      delete[] data;
-      return std;
+    template <typename T, typename... Args>
+    std::vector<T> makeVector(T const arg1, Args const... args) {
+      auto data = makeVector(args...);
+      data.push_back(arg1);
+      return data;
     }
   }
+  template <typename T, typename... Args>
+  T sum(Args const... args) {
+    auto data = detail::makeVector(args...);
+    return math::sum(data.begin(),data.end());
+  }
+ 
+  template <typename T, typename... Args>
+  T mean(Args const... args) {
+    auto data = detail::makeVector(args...);	
+    return math::mean(data.begin(),data.end());
+  }
+  template <typename T, typename... Args>
+  T std(Args const... args) {
+    auto data = detail::makeVector(args...);
+    return math::std(data.begin(),data.end());
+  }
+}
 
 }
-}
-MFL_END
+
+
 
 #endif//MFL_MATH_STATISTICS_INCLUDED
