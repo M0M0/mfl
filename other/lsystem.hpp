@@ -3,13 +3,13 @@
 
 #include <string>
 #include <map>
-#include <list>
+#include <vector>
 
 #include "../common.hpp"
 
 MFL_BEGIN
 
-class LSystem{
+class LSystem {
  public:
   LSystem(std::map<char,std::string> ruleset, std::string state)
       : iteration_count_(0),
@@ -17,26 +17,27 @@ class LSystem{
 	ruleset_(ruleset) {}
   int Iterate() {
     std::map<char,std::string>::iterator rule;
-    auto iter = state_.begin();
-    while (iter != state_.end()) {
+    std::vector<char> newstate;
+    for (auto iter = state_.begin(); iter != state_.end(); ++iter) {
       rule = ruleset_.find(*iter);
       if (rule != ruleset_.end()) {
-	iter = state_.erase(iter); // iter now points to the next position
-	// no change in iter necessary since it points to the following position
-        state_.insert(iter,rule->second.begin(),rule->second.end());
-      } else ++iter;
+	newstate.insert(newstate.end(),rule->second.begin(),rule->second.end());
+      }
     }
+    std::swap(state_,newstate);
     ++iteration_count_;
     return 0;
   }
   std::string state() const {
     return std::string(state_.begin(),state_.end());
   }
-  unsigned int iteration_count() const { return iteration_count_; }
+  unsigned int iteration_count() const {
+    return iteration_count_;
+  }
 
  protected:
   unsigned int iteration_count_;
-  std::list<char> state_;
+  std::vector<char> state_;
   std::map<char,std::string> ruleset_;
 };
 

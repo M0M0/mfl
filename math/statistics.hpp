@@ -45,37 +45,36 @@ value_type std(IterT first, IterT last) {
 
 namespace variadic{
   namespace detail{
+    //TODO: remove memmove's with std::move
     template <typename T>
-    std::vector<T> makeVector(T const arg1){
+    std::vector<T> MakeVector(T const arg1){
       return std::vector<T>(1,arg1);
     }
     template <typename T, typename... Args>
-    std::vector<T> makeVector(T const arg1, Args const... args) {
-      auto data = makeVector(args...);
+    std::vector<T> MakeVector(T const arg1, Args const... args) {
+      auto data = MakeVector<T>(args...);
       data.push_back(arg1);
       return data;
     }
   }
   template <typename T, typename... Args>
-  T sum(Args const... args) {
-    auto data = detail::makeVector(args...);
+  T sum(T const arg1, Args const... args) {
+    auto data = detail::MakeVector<T>(arg1,args...);
     return math::sum(data.begin(),data.end());
   }
  
   template <typename T, typename... Args>
-  T mean(Args const... args) {
-    auto data = detail::makeVector(args...);	
+  T mean(T const arg1, Args const... args) {
+    auto data = detail::MakeVector<T>(arg1,args...);	
     return math::mean(data.begin(),data.end());
   }
   template <typename T, typename... Args>
-  T std(Args const... args) {
-    auto data = detail::makeVector(args...);
+  T std(T const arg1, Args const... args) {
+    auto data = detail::MakeVector<T>(arg1,args...);
     return math::std(data.begin(),data.end());
   }
 }
 
 }
-
-
 
 #endif//MFL_MATH_STATISTICS_INCLUDED

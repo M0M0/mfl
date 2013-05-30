@@ -21,8 +21,7 @@ class Singleton{
   static T* _instance;
 };
 
-template <class T>
-T* Singleton<T>::_instance = nullptr;
+template <class T> T* Singleton<T>::_instance = nullptr;
   
 MFL_END
 
