@@ -9,14 +9,14 @@
 
 namespace io {
 
-std::string ReadFile(char const * file) {
+std::string ReadFile(std::string file) {
   std::string fstring;
   std::ifstream fptr(file);
   if (fptr.is_open()) {
     fstring = std::string((std::istreambuf_iterator<char>(fptr)),
 			   std::istreambuf_iterator<char>());
   } else {
-    throw std::runtime_error("The file \'"+file+"\' could not be opened!");
+    throw std::runtime_error("The file \'" + file + "\' could not be opened!");
   }
   return fstring;
 }
